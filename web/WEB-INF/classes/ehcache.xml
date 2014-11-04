@@ -1,0 +1,24 @@
+<ehcache>
+  <diskStore path="java.io.tmpdir/ehcache" />
+
+  <defaultCache
+      maxElementsInMemory="100" eternal="false" overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="180"
+      diskPersistent="false" diskExpiryThreadIntervalSeconds="600" memoryStoreEvictionPolicy="LFU"/>
+
+  <cache name="org.hibernate.cache.StandardQueryCache"
+      maxElementsInMemory="50" eternal="false" overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="180"
+      diskPersistent="false" diskExpiryThreadIntervalSeconds="600" memoryStoreEvictionPolicy="LFU"/>
+
+  <cache name="org.hibernate.cache.UpdateTimestampsCache"
+      maxElementsInMemory="20" eternal="false" overflowToDisk="true" timeToIdleSeconds="100" timeToLiveSeconds="150"
+      diskPersistent="false" diskExpiryThreadIntervalSeconds="600" memoryStoreEvictionPolicy="LFU"/>
+
+  <cache name="org.tharrisx.frameworkexample.beans.User"
+      maxElementsInMemory="100" eternal="false" overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="180"
+      diskPersistent="false" diskExpiryThreadIntervalSeconds="600" memoryStoreEvictionPolicy="LFU"/>
+
+  <cache name="org.tharrisx.frameworkexample.beans.UserEvent"
+      maxElementsInMemory="100" eternal="false" overflowToDisk="true" timeToIdleSeconds="120" timeToLiveSeconds="180"
+      diskPersistent="false" diskExpiryThreadIntervalSeconds="600" memoryStoreEvictionPolicy="LFU"/>
+
+</ehcache>

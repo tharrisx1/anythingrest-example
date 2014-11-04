@@ -1,0 +1,4 @@
+<Context reloadable="true" crossContext="true">
+  <ResourceLink name="logFolder" global="logFolder" type="java.lang.String" />
+  <ResourceLink name="jdbc/restdb" global="jdbc/restdb" type="javax.sql.DataSource"/>
+</Context>
