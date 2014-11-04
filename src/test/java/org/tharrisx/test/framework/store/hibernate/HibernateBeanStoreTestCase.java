@@ -13,6 +13,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistryBuilder;
 import org.junit.Before;
 import org.junit.Test;
+import org.tharrisx.framework.store.BeanStore;
 import org.tharrisx.framework.store.BeanStoreFactory;
 import org.tharrisx.framework.store.StorableBean;
 import org.tharrisx.framework.store.hibernate.HibernateBeanStoreFactory;
@@ -42,7 +43,8 @@ public class HibernateBeanStoreTestCase extends TestCase {
 
   @Test
   public void test() throws Exception {
-    getBeanStoreFactory().getBeanStore(User.class);
+    BeanStore<User> userStore = getBeanStoreFactory().getBeanStore(User.class);
+    //userStore.
   }
 
   @Override
