@@ -11,6 +11,7 @@ import junit.framework.TestCase;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistryBuilder;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tharrisx.framework.store.BeanStore;
@@ -41,6 +42,7 @@ public class HibernateBeanStoreTestCase extends TestCase {
     this.beanStoreFactory = arg;
   }
 
+  @SuppressWarnings("unused")
   @Test
   public void test() throws Exception {
     BeanStore<User> userStore = getBeanStoreFactory().getBeanStore(User.class);
@@ -87,6 +89,7 @@ public class HibernateBeanStoreTestCase extends TestCase {
   }
 
   @Override
+  @After
   protected void tearDown() throws Exception {
     // nothing
   }
