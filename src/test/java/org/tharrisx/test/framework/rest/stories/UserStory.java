@@ -1,5 +1,6 @@
 package org.tharrisx.test.framework.rest.stories;
 
+import java.net.URI;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,7 +59,9 @@ public class UserStory extends BaseStory {
     Date birthDate = null;
 
     startTiming(pipeFormat.name() + " users post");
-    String postedUserLocation = getUserApi(pipeFormat).postItem(generateTestUser()).getPath();
+    RootedBeanTypeApi<ExampleUser> userApi = getUserApi(pipeFormat);
+    URI uri = userApi.postItem(generateTestUser());
+    String postedUserLocation = uri.getPath();
     endTiming(pipeFormat.name() + " users post");
 
     aUserId = postedUserLocation.substring(postedUserLocation.lastIndexOf('/') + 1, postedUserLocation.length());
@@ -115,9 +118,9 @@ public class UserStory extends BaseStory {
     //System.out.println("newUser.getDateOfBirth()=" + newUser.getDateOfBirth());
     assert (firstUser.getEmail().equals(newUser.getEmail()));
 
-    startTiming(pipeFormat.name() + " users delete id");
-    getUserApi(pipeFormat).deleteItem(firstUser.getId());
-    endTiming(pipeFormat.name() + " users delete id");
+    //startTiming(pipeFormat.name() + " users delete id");
+    //getUserApi(pipeFormat).deleteItem(firstUser.getId());
+    //endTiming(pipeFormat.name() + " users delete id");
 
   }
 

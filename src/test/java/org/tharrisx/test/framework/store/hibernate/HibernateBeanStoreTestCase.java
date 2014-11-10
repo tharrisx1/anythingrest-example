@@ -44,7 +44,15 @@ public class HibernateBeanStoreTestCase extends TestCase {
   @Test
   public void test() throws Exception {
     BeanStore<User> userStore = getBeanStoreFactory().getBeanStore(User.class);
-    //userStore.
+    /*
+    BeanStoreTransaction transaction = getBeanStoreFactory().beginTransaction(User.class, "test");
+    User user = new User();
+    user.setFirstName("Bob");
+    user.setLastName("Dobbs");
+    user.setDateOfBirth(new Date());
+    userStore.createOrUpdateBean(user, transaction);
+    getBeanStoreFactory().endTransaction(User.class, transaction);
+    */
   }
 
   @Override

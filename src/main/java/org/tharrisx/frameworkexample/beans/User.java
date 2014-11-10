@@ -11,6 +11,9 @@ import javax.persistence.Table;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 import org.tharrisx.framework.bean.Bean;
 import org.tharrisx.framework.bean.StampedBean;
 import org.tharrisx.framework.pipe.ProtectionCheck;
@@ -24,6 +27,7 @@ import org.tharrisx.framework.rest.annotations.RootedTypeResourceName;
 import org.tharrisx.framework.rest.annotations.TypeAllResource;
 import org.tharrisx.framework.rest.annotations.TypeMatchResource;
 import org.tharrisx.framework.rest.annotations.TypeResource;
+import org.tharrisx.framework.store.hibernate.DatetimeUserType;
 import org.tharrisx.frameworkexample.resources.UserResources.UserInstanceResource;
 import org.tharrisx.frameworkexample.resources.UserResources.UsersAllResource;
 import org.tharrisx.frameworkexample.resources.UserResources.UsersMatchResource;
@@ -48,6 +52,9 @@ import com.thoughtworks.xstream.annotations.XStreamConverter;
 @TypeMatchResource(UsersMatchResource.class)
 @InstanceResource(UserInstanceResource.class)
 @XStreamAlias("user")
+@TypeDefs({
+  @TypeDef(name="datetimeUserType", typeClass = DatetimeUserType.class)
+})
 public class User extends StampedBean {
 
   public static final String NAME_USER_OWNER = "PUBLIC";
@@ -142,6 +149,32 @@ public class User extends StampedBean {
   }
 
   @Basic
+  @Column(length = 50, nullable = true, updatable = true)
+  @PipePropertyOrder(19.5)
+  private String firstName;
+
+  public String getFirstName() {
+    return this.firstName;
+  }
+
+  public void setFirstName(String arg) {
+    this.firstName = arg;
+  }
+
+  @Basic
+  @Column(length = 50, nullable = true, updatable = true)
+  @PipePropertyOrder(19.6)
+  private String lastName;
+
+  public String getLastName() {
+    return this.lastName;
+  }
+
+  public void setLastName(String arg) {
+    this.lastName = arg;
+  }
+
+  @Basic
   @Column(length = 1, nullable = true, updatable = true)
   @PipePropertyOrder(20.0)
   private String gender;
@@ -168,7 +201,7 @@ public class User extends StampedBean {
   }
 
   @Basic
-  //@Type(type = "LongTimestamp")
+  @Type(type = "datetimeUserType")
   @Column(length = 7, nullable = false, updatable = false)
   @PipePropertyOrder(23.0)
   @XStreamConverter(StringDateConverter.class)
@@ -262,9 +295,26 @@ public class User extends StampedBean {
 
   @Override
   public String toString() {
-    return new ToStringBuilder(this).append("id", getId()).append("created", getCreated()).append("lastChanged", getLastChanged()).append("externalProfileId", getExternalProfileId())
-        .append("externalProfileSource", getExternalProfileSource()).append("status", getStatus()).append("testUser", getTestUser()).append("pin", getPin()).append("authToken", getAuthToken())
-        .append("gender", getGender()).append("email", getEmail()).append("language", getLanguage()).append("dateOfBirth", getDateOfBirth()).append("city", getCity()).append("state", getState())
-        .append("country", getCountry()).append("postalCode", getPostalCode()).toString();
+    return new ToStringBuilder(this)
+        .append("id", getId())
+        .append("firstName", getFirstName())
+        .append("lastName", getLastName())
+        .append("created", getCreated())
+        .append("lastChanged", getLastChanged())
+        .append("externalProfileId", getExternalProfileId())
+        .append("externalProfileSource", getExternalProfileSource())
+        .append("status", getStatus())
+        .append("testUser", getTestUser())
+        .append("pin", getPin())
+        .append("authToken", getAuthToken())
+        .append("gender", getGender())
+        .append("email", getEmail())
+        .append("language", getLanguage())
+        .append("dateOfBirth", getDateOfBirth())
+        .append("city", getCity())
+        .append("state", getState())
+        .append("country", getCountry())
+        .append("postalCode", getPostalCode())
+        .toString();
   }
 }

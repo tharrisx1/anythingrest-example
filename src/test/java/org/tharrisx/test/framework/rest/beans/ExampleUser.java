@@ -106,7 +106,7 @@ public class ExampleUser extends ExampleBean {
   }
 
   public void setDateOfBirth(Date arg) {
-    this.dateOfBirth = arg;
+    this.dateOfBirth = new Date(arg.getTime());
   }
 
   private String city = null;
@@ -166,7 +166,7 @@ public class ExampleUser extends ExampleBean {
   }
 
   public void setCreated(Date arg) {
-    this.created = arg;
+    this.created = new Date(arg.getTime());
   }
 
   private Date lastChanged = null;
@@ -176,7 +176,7 @@ public class ExampleUser extends ExampleBean {
   }
 
   public void setLastChanged(Date arg) {
-    this.lastChanged = arg;
+    this.lastChanged = new Date(arg.getTime());
   }
 
   public ExampleUser() {
@@ -186,15 +186,15 @@ public class ExampleUser extends ExampleBean {
   @Override
   public void fillFromRepresentation(Document document, String xpathBase) throws Exception {
     setId(BeanXPathHelper.pullMandatoryStringNode(document, xpathBase + "id"));
-    setExternalProfileId(BeanXPathHelper.pullMandatoryStringNode(document, xpathBase + "externalProfileId"));
-    setExternalProfileSource(BeanXPathHelper.pullMandatoryStringNode(document, xpathBase + "externalProfileSource"));
+    setExternalProfileId(BeanXPathHelper.pullOptionalStringNode(document, xpathBase + "externalProfileId"));
+    setExternalProfileSource(BeanXPathHelper.pullOptionalStringNode(document, xpathBase + "externalProfileSource"));
     setStatus(BeanXPathHelper.pullOptionalIntegerNode(document, xpathBase + "status"));
     setTestUser(BeanXPathHelper.pullOptionalIntegerNode(document, xpathBase + "testUser"));
     setPin(BeanXPathHelper.pullOptionalStringNode(document, xpathBase + "pin"));
     setAuthToken(BeanXPathHelper.pullOptionalStringNode(document, xpathBase + "authToken"));
-    setGender(BeanXPathHelper.pullMandatoryStringNode(document, xpathBase + "gender"));
+    setGender(BeanXPathHelper.pullOptionalStringNode(document, xpathBase + "gender"));
     setEmail(BeanXPathHelper.pullOptionalStringNode(document, xpathBase + "email"));
-    setLanguage(BeanXPathHelper.pullMandatoryStringNode(document, xpathBase + "language"));
+    setLanguage(BeanXPathHelper.pullOptionalStringNode(document, xpathBase + "language"));
     setDateOfBirth(BeanXPathHelper.pullOptionalDateNode(document, xpathBase + "dateOfBirth"));
     setCity(BeanXPathHelper.pullOptionalStringNode(document, xpathBase + "city"));
     setState(BeanXPathHelper.pullOptionalStringNode(document, xpathBase + "state"));

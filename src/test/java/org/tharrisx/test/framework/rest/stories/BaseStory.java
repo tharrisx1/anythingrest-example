@@ -49,7 +49,7 @@ public abstract class BaseStory {
     this.serverPort = Integer.valueOf(System.getProperty(SERVER_PORT_PROP));
     this.loggingEnabled = true; //Boolean.getBoolean(System.getProperty(LOGGING_PROP));
     this.codeTimingEnabled = true; //Boolean.getBoolean(System.getProperty(TIMING_PROP));
-    getCodeTimer().setDisabled(isCodeTimingEnabled());
+    getCodeTimer().setDisabled(!isCodeTimingEnabled());
   }
 
   @Test

@@ -10,6 +10,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 import org.tharrisx.framework.pipe.converters.CDataConverter;
 import org.tharrisx.framework.pipe.converters.StringCalendarConverter;
 import org.tharrisx.framework.rest.annotations.InstanceResource;
@@ -17,6 +20,7 @@ import org.tharrisx.framework.rest.annotations.TypeAllResource;
 import org.tharrisx.framework.rest.annotations.TypeMatchResource;
 import org.tharrisx.framework.rest.annotations.TypeResource;
 import org.tharrisx.framework.store.StorableBean;
+import org.tharrisx.framework.store.hibernate.DatetimeUserType;
 import org.tharrisx.frameworkexample.resources.UserEventResources.UserEventInstanceResource;
 import org.tharrisx.frameworkexample.resources.UserEventResources.UserEventsAllResource;
 import org.tharrisx.frameworkexample.resources.UserEventResources.UserEventsMatchResource;
@@ -34,13 +38,16 @@ import com.thoughtworks.xstream.annotations.XStreamConverter;
 @TypeMatchResource(UserEventsMatchResource.class)
 @InstanceResource(UserEventInstanceResource.class)
 @XStreamAlias("event")
+@TypeDefs({
+  @TypeDef(name="datetimeUserType", typeClass = DatetimeUserType.class)
+})
 public class UserEvent extends StorableBean {
 
   public static final String NAMED_QUERY_GET_EVENTS = "getUserEventsByUserID";
   public static final String NAMED_QUERY_GET_EVENTS_VIEW_FILTER = "getUserEventsByUserIDAndViewed";
 
   @Basic
-  //@Type(type = "LongTimestamp")
+  @Type(type = "datetimeUserType")
   @Column(length = 7, nullable = false, updatable = false)
   @XStreamConverter(StringCalendarConverter.class)
   private Date stamp = null;
@@ -50,7 +57,7 @@ public class UserEvent extends StorableBean {
   }
 
   public void setStamp(Date arg) {
-    this.stamp = arg;
+    this.stamp = new Date(arg.getTime());
   }
 
   @Basic

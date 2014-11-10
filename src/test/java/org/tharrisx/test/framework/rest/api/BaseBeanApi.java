@@ -4,24 +4,26 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.glassfish.jersey.client.ClientResponse;
 import org.json.JSONObject;
 import org.json.XML;
 import org.tharrisx.test.framework.rest.beans.ExampleBean;
 import org.tharrisx.util.StringFedInputStream;
 import org.w3c.dom.Document;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.WebResource.Builder;
-
 public class BaseBeanApi<T extends ExampleBean> {
 
-  private static final String BASE_CONTEXT_PATH = "/anythingrest/";
+  private static final String BASE_CONTEXT_PATH = "/anythingrest-example/";
 
   private final Class<T> type;
 
@@ -72,7 +74,7 @@ public class BaseBeanApi<T extends ExampleBean> {
     this.beanInstanceNodeName = beanInstanceNodeName1;
     this.serverBaseUri = "http://" + serverHost + ":" + serverPort + BASE_CONTEXT_PATH;
     this.loggingEnabled = loggingEnabled1;
-    this.client = Client.create();
+    this.client = ClientBuilder.newClient();
   }
 
   protected class RestUriBuilder {
@@ -127,55 +129,49 @@ public class BaseBeanApi<T extends ExampleBean> {
   }
 
   protected Document getResourceItem(URI uri) throws Exception {
-    if(isLoggingEnabled())
-      logInteraction("Getting resource: " + uri);
-    WebResource resource = getClient().resource(uri);
-    Builder builder = resource.accept(getMediaType()).type(getMediaType());
+    if(isLoggingEnabled()) logInteraction("Getting resource: " + uri);
+    WebTarget resource = getClient().target(uri);
+    Builder builder = resource.request(getMediaType()).accept(getMediaType());
     String result = builder.get(String.class);
-    if(isLoggingEnabled())
-      logInteraction("result: " + result);
+    if(isLoggingEnabled()) logInteraction("result: " + result);
     return getDocument(result);
   }
 
   protected URI postResourceItem(URI uri, ExampleBean exampleBean) throws Exception {
-    if(isLoggingEnabled())
-      logInteraction("Posting resource: " + uri);
+    if(isLoggingEnabled()) logInteraction("Posting resource: " + uri);
     URI ret = null;
     try {
       String representation = exampleBean.toRepresentation(getBeanPipeFormat());
-      if(isLoggingEnabled())
-        logInteraction("representation: " + representation);
-      WebResource resource = getClient().resource(uri);
-      Builder builder = resource.accept(getMediaType()).type(getMediaType()).entity(representation);
-      ret = builder.post(ClientResponse.class).getLocation();
+      if(isLoggingEnabled()) logInteraction("representation: " + representation);
+      WebTarget wt = getClient().target(uri);
+      Builder b = wt.request(getMediaType());
+      Response resp = b.post(Entity.text(representation), Response.class);
+      ret = resp.getLocation();
       return ret;
     } finally {
-      if(isLoggingEnabled())
-        logInteraction("Post successful.");
+      if(isLoggingEnabled()) logInteraction("Post successful.");
     }
   }
 
   protected void putResourceItem(URI uri, ExampleBean exampleBean) throws Exception {
-    if(isLoggingEnabled())
-      logInteraction("Putting resource: " + uri);
-    String representation = exampleBean.toRepresentation(getBeanPipeFormat());
-    if(isLoggingEnabled())
-      logInteraction("representation: " + representation);
-    WebResource resource = getClient().resource(uri);
-    Builder builder = resource.accept(getMediaType()).type(getMediaType()).entity(representation);
-    builder.put(ClientResponse.class);
-    if(isLoggingEnabled())
-      logInteraction("Put successful.");
+    if(isLoggingEnabled()) logInteraction("Putting resource: " + uri);
+    try {
+      String representation = exampleBean.toRepresentation(getBeanPipeFormat());
+      if(isLoggingEnabled()) logInteraction("representation: " + representation);
+      WebTarget wb = getClient().target(uri);
+      Builder b = wb.request(getMediaType());
+      b.put(Entity.text(representation), Response.class);
+    } finally {
+      if(isLoggingEnabled()) logInteraction("Put successful.");
+    }
   }
 
   protected void deleteResourceItem(URI uri) throws Exception {
-    if(isLoggingEnabled())
-      logInteraction("Deleting resource: " + uri);
-    WebResource resource = getClient().resource(uri);
-    Builder builder = resource.accept(getMediaType()).type(getMediaType());
+    if(isLoggingEnabled()) logInteraction("Deleting resource: " + uri);
+    WebTarget resource = getClient().target(uri);
+    Builder builder = resource.request(getMediaType()).accept(getMediaType());
     builder.delete(ClientResponse.class);
-    if(isLoggingEnabled())
-      logInteraction("Delete successful.");
+    if(isLoggingEnabled()) logInteraction("Delete successful.");
   }
 
   protected Document getDocument(String text) throws Exception {

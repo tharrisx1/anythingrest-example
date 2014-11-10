@@ -26,7 +26,7 @@ public class ExampleUserEvent extends ExampleBean {
   }
 
   public void setStamp(Date arg) {
-    this.stamp = arg;
+    this.stamp = new Date(arg.getTime());
   }
 
   private String userId = null;
