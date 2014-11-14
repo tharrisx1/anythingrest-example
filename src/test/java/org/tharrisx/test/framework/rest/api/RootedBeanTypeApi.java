@@ -31,8 +31,8 @@ public class RootedBeanTypeApi<T extends ExampleBean> extends BaseBeanApi<T> {
     return new ExamplePageableBeanList<>(getResourceItem(uri), getType(), getBeanInstanceNodeName());
   }
 
-  public ExamplePageableBeanList<T> getItems(int start, int end) throws Exception {
-    URI uri = new RestUriBuilder().typeResource(getPathedBeanTypeUriNames()[0]).appendPaging(start, end).toUri();
+  public ExamplePageableBeanList<T> getItems(int start, int end, String sortBy, String sortDirection) throws Exception {
+    URI uri = new RestUriBuilder().typeResource(getPathedBeanTypeUriNames()[0]).appendPaging(start, end, sortBy, sortDirection).toUri();
     return new ExamplePageableBeanList<>(getResourceItem(uri), getType(), getBeanInstanceNodeName());
   }
 
@@ -41,8 +41,8 @@ public class RootedBeanTypeApi<T extends ExampleBean> extends BaseBeanApi<T> {
     return new ExamplePageableBeanList<>(getResourceItem(uri), getType(), getBeanInstanceNodeName());
   }
 
-  public ExamplePageableBeanList<T> getItems(int start, int end, Map<String, String> matchingProperties) throws Exception {
-    URI uri = new RestUriBuilder().matchResource(getPathedBeanTypeUriNames()[0], matchingProperties).appendPaging(start, end).toUri();
+  public ExamplePageableBeanList<T> getItems(int start, int end, String sortBy, String sortDirection, Map<String, String> matchingProperties) throws Exception {
+    URI uri = new RestUriBuilder().matchResource(getPathedBeanTypeUriNames()[0], matchingProperties).appendPaging(start, end, sortBy, sortDirection).toUri();
     return new ExamplePageableBeanList<>(getResourceItem(uri), getType(), getBeanInstanceNodeName());
   }
 

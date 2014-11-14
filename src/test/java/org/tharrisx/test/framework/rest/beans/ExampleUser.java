@@ -19,6 +19,26 @@ public class ExampleUser extends ExampleBean {
     this.id = arg;
   }
 
+  private String lastName = null;
+
+  public String getLastName() {
+    return this.lastName;
+  }
+
+  public void setLastName(String arg) {
+    this.lastName = arg;
+  }
+
+  private String firstName = null;
+
+  public String getFirstName() {
+    return this.firstName;
+  }
+
+  public void setFirstName(String arg) {
+    this.firstName = arg;
+  }
+
   private String externalProfileId = null;
 
   public String getExternalProfileId() {
@@ -186,6 +206,8 @@ public class ExampleUser extends ExampleBean {
   @Override
   public void fillFromRepresentation(Document document, String xpathBase) throws Exception {
     setId(BeanXPathHelper.pullMandatoryStringNode(document, xpathBase + "id"));
+    setLastName(BeanXPathHelper.pullOptionalStringNode(document, xpathBase + "lastName"));
+    setFirstName(BeanXPathHelper.pullOptionalStringNode(document, xpathBase + "firstName"));
     setExternalProfileId(BeanXPathHelper.pullOptionalStringNode(document, xpathBase + "externalProfileId"));
     setExternalProfileSource(BeanXPathHelper.pullOptionalStringNode(document, xpathBase + "externalProfileSource"));
     setStatus(BeanXPathHelper.pullOptionalIntegerNode(document, xpathBase + "status"));
@@ -206,15 +228,16 @@ public class ExampleUser extends ExampleBean {
 
   @Override
   public String toRepresentation(PipeFormat pipeFormat) throws Exception {
-    return getBeanResourceBuilder("user", pipeFormat).addNode("id", getId()).addNode("externalProfileId", getExternalProfileId()).addNode("externalProfileSource", getExternalProfileSource())
-        .addNode("status", getStatus()).addNode("testUser", getTestUser()).addNode("pin", getPin()).addNode("authToken", getAuthToken()).addNode("gender", getGender()).addNode("email", getEmail())
-        .addNode("language", getLanguage()).addNode("dateOfBirth", getDateOfBirth()).addNode("city", getCity()).addNode("state", getState()).addNode("country", getCountry())
-        .addNode("postalCode", getPostalCode()).addNode("created", getCreated()).addNode("lastChanged", getLastChanged()).getRepresentation();
+    return getBeanResourceBuilder("user", pipeFormat).addNode("id", getId()).addNode("lastName", getLastName()).addNode("firstName", getFirstName())
+        .addNode("externalProfileId", getExternalProfileId()).addNode("externalProfileSource", getExternalProfileSource()).addNode("status", getStatus()).addNode("testUser", getTestUser())
+        .addNode("pin", getPin()).addNode("authToken", getAuthToken()).addNode("gender", getGender()).addNode("email", getEmail()).addNode("language", getLanguage())
+        .addNode("dateOfBirth", getDateOfBirth()).addNode("city", getCity()).addNode("state", getState()).addNode("country", getCountry()).addNode("postalCode", getPostalCode())
+        .addNode("created", getCreated()).addNode("lastChanged", getLastChanged()).getRepresentation();
   }
 
   @Override
   public String toString() {
-    return new ToStringBuilder(this).append("id", getId()).append("externalProfileId", getExternalProfileId()).append("externalProfileSource", getExternalProfileSource())
+    return new ToStringBuilder(this).append("id", getId()).append("lastName", getLastName()).append("firstName", getFirstName()).append("externalProfileSource", getExternalProfileSource())
         .append("status", getStatus()).append("testUser", getTestUser()).append("pin", getPin()).append("authToken", getAuthToken()).append("gender", getGender()).append("email", getEmail())
         .append("language", getLanguage()).append("dateOfBirth", getDateOfBirth()).append("city", getCity()).append("state", getState()).append("country", getCountry())
         .append("postalCode", getPostalCode()).append("created", getCreated()).append("lastChanged", getLastChanged()).toString();

@@ -77,7 +77,7 @@ public class UserStory extends BaseStory {
     assert (usersList1.getList().size() > 0);
 
     startTiming(pipeFormat.name() + " users get page");
-    usersList2 = getUserApi(pipeFormat).getItems(0, 30);
+    usersList2 = getUserApi(pipeFormat).getItems(0, 30, "lastName,firstName", "asc,asc");
     endTiming(pipeFormat.name() + " users get page");
     assert (usersList2.getTotalCount() > 0);
 
@@ -90,7 +90,7 @@ public class UserStory extends BaseStory {
     //assert (usersList1.getList().size() > 0);
 
     startTiming(pipeFormat.name() + " users get matching page");
-    usersList2 = getUserApi(pipeFormat).getItems(0, 30, matchProps);
+    usersList2 = getUserApi(pipeFormat).getItems(0, 30, "lastName,firstName", "asc,asc", matchProps);
     endTiming(pipeFormat.name() + " users get matching page");
     //assert (usersList2.getTotalCount() > 0);
 
@@ -126,6 +126,8 @@ public class UserStory extends BaseStory {
 
   private ExampleUser generateTestUser() throws ParseException {
     ExampleUser exampleUser = new ExampleUser();
+    exampleUser.setLastName(RandomGeneratorUtils.randomString(6, 20));
+    exampleUser.setFirstName(RandomGeneratorUtils.randomString(6, 12));
     exampleUser.setGender(RandomGeneratorUtils.randomBoolean() ? "m" : "f");
     exampleUser.setEmail(RandomGeneratorUtils.randomEmail());
     exampleUser.setCity(RandomGeneratorUtils.randomString(10, 30));

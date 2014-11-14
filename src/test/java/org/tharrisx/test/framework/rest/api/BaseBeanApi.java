@@ -118,8 +118,9 @@ public class BaseBeanApi<T extends ExampleBean> {
       return this;
     }
 
-    public RestUriBuilder appendPaging(int start, int end) {
+    public RestUriBuilder appendPaging(int start, int end, String sortBy, String sortDirection) {
       this.buffer.append("?start=").append(start).append("&end=").append(end);
+      this.buffer.append("&sortBy=").append(sortBy).append("&sortDirection=").append(sortDirection);
       return this;
     }
 
