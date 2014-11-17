@@ -23,7 +23,7 @@ import org.w3c.dom.Document;
 
 public class BaseBeanApi<T extends ExampleBean> {
 
-  private static final String BASE_CONTEXT_PATH = "/anythingrest-example/";
+  private static final String BASE_CONTEXT_PATH = "/anythingrest-example/-/";
 
   private final Class<T> type;
 

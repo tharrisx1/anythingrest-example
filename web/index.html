@@ -1,0 +1,155 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>AnythingRest Example</title>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+<script type="text/javascript" src="https://vkbeautify.googlecode.com/files/vkbeautify.0.99.00.beta.js"></script>
+
+<script type="text/javascript">
+  angular
+
+      .module('example', [])
+
+      .factory('transformRequestAsJson', function() {
+        function transformRequest(data, getHeaders) {
+          var headers = getHeaders();
+          headers['Accept'] = 'application/json';
+          headers['Content-type'] = 'application/json; charset=utf-8';
+          return (data);
+        }
+        return (transformRequest);
+      })
+
+      .factory('transformRequestAsXml', function() {
+        function transformRequest(data, getHeaders) {
+          var headers = getHeaders();
+          headers['Accept'] = 'application/xml';
+          headers['Content-type'] = 'application/xml; charset=utf-8';
+          return (data);
+        }
+        return (transformRequest);
+      })
+
+      .controller('examplecontroller', function($scope, $http, transformRequestAsJson, transformRequestAsXml) {
+
+        $scope.type = 'json';
+        $scope.beautify = 'off';
+        $scope.status = null;
+        $scope.result = null;
+
+        $scope.match_match = null;
+        $scope.match_start = null;
+        $scope.match_end = null;
+        $scope.match_sortby = null;
+        $scope.match_sortdirection = null;
+
+        $scope._onSuccess = function(data, status, headers, config) {
+          $scope.status = status;
+          if ($scope.beautify == 'on') {
+            if ($scope.type == 'json') {
+              $scope.result = JSON.stringify(data, null, "  ");
+            } else {
+              $scope.result = vkbeautify.xml(data, '  ');
+            }
+          } else {
+            $scope.result = data;
+          }
+        };
+
+        $scope._onError = function(data, status, headers, config) {
+          $scope.status = status;
+          $scope.result = data;
+        };
+
+        $scope._get = function(url) {
+          $http(
+              {
+                method : "get",
+                url : url,
+                transformRequest : $scope.type == 'json' ? transformRequestAsJson
+                    : transformRequestAsXml
+              }).success($scope._onSuccess).error($scope._onError);
+        };
+
+        $scope.getAll = function() {
+          $scope._get('/anythingrest-example/-/users/all/');
+        }
+
+        $scope.getMatch = function() {
+          var url = '/anythingrest-example/-/users/match/' + $scope.match_match;
+          var ampersandEngaged = false;
+          if ($scope.match_start != null && $scope.match_start != '') {
+            url += '?start=' + $scope.match_start;
+            ampersandEngaged = true;
+          }
+          if ($scope.match_end != null && $scope.match_end != '') {
+            url += (ampersandEngaged ? '&' : '?') + 'end='
+                + $scope.match_end;
+            ampersandEngaged = true;
+          }
+          if ($scope.match_sortby != null && $scope.match_sortby != '') {
+            url += (ampersandEngaged ? '&' : '?') + 'sortBy='
+                + $scope.match_sortby;
+            ampersandEngaged = true;
+          }
+          if ($scope.match_sortby != null && $scope.match_sortby != '') {
+            url += (ampersandEngaged ? '&' : '?') + 'sortDirection='
+                + $scope.match_sortdirection;
+            ampersandEngaged = true;
+          }
+          $scope._get(url);
+        }
+
+      });
+</script>
+
+</head>
+
+<body>
+
+  <div ng-app="example" ng-controller="examplecontroller">
+
+    <h1>AnythingRest Example - Manual Rest Test</h1>
+
+    <fieldset style="border: 1; display: inline-block">
+      <legend>Content Type</legend>
+      <input id="radio-type-json" type="radio" ng-model="type" value="json" /><label for="radio-type-json">JSON</label>
+      <input id="radio-type-xml" type="radio" ng-model="type" value="xml" /><label for="radio-type-xml">XML</label>
+    </fieldset>
+    <fieldset style="border: 1; display: inline-block">
+      <legend>Beautify Output</legend>
+      <input id="radio-beautify-raw" type="radio" ng-model="beautify" value="off" /><label for="radio-beautify-raw">Raw</label>
+      <input id="radio-beautify-beautify" type="radio" ng-model="beautify" value="on" /><label
+        for="radio-beautify-beautify">Beautify</label>
+    </fieldset>
+
+    <hr>
+    <div>
+      <span>/rest/users/all</span>
+      <button ng-click="getAll()">Get</button>
+    </div>
+
+    <hr>
+    <div>
+      <span>/rest/users/match/</span> <span><input type="text" size="12" ng-model="match_match" /></span> <span>/?start=</span><span><input
+        type="text" size="2" ng-model="match_start" /></span> <span>&end=</span><span><input type="text" size="2"
+        ng-model="match_end" /></span> <span>&sortBy=</span><span><input type="text" size="6" ng-model="match_sortby" /></span>
+      <span>&sortDirection=</span><span><input type="text" size="6" ng-model="match_sortdirection" /></span>
+      <button ng-click="getMatch()">Get</button>
+    </div>
+
+
+    <hr>
+    <div style="border: 1; display: inline-block">Status: {{status}}</div>
+    <hr>
+    <div style="border: 1; display: inline-block">
+      <textarea rows="25" cols="132">{{result}}</textarea>
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -52,7 +52,7 @@ public class UserPipeTestCase extends PipeTestCase {
 
     List<User> list = new LinkedList<>();
     list.add(user);
-    setTargetBean(new PageableBeanList<>(list, 1, 1, 1));
+    setTargetBean(new PageableBeanList<>(list, 1, 1, 1, "", ""));
   }
 
   @Test
