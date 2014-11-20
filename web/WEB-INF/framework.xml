@@ -55,7 +55,7 @@
     <constructor-arg>
       <ref bean="sessionFactory" />
     </constructor-arg>
-    <constructor-arg value="true"/>
+    <constructor-arg value="false"/>
   </bean>
 
   <bean class="org.tharrisx.util.spring.VersionStampsLogger">
