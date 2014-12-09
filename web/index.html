@@ -35,6 +35,8 @@
 
       .controller('examplecontroller', function($scope, $http, transformRequestAsJson, transformRequestAsXml) {
 
+        $scope.root_resource = '/anythingrest-example/-';
+
         $scope.type = 'json';
         $scope.beautify = 'off';
         $scope.status = null;
@@ -45,6 +47,13 @@
         $scope.match_end = null;
         $scope.match_sortby = null;
         $scope.match_sortdirection = null;
+
+        $scope.post_body = '{"externalProfileId":"F152108066AC57CCCBFE3EF418245105","externalProfileSource":"http://www.myexample.com/profile/B78BE1934F56DE8EEA5425E67C875DB6/","firstName":"fimevmfab","lastName":"oyifghmknqlljkmipwq","gender":"m","email":"uhjhn@syuwevdsajr.com","language":"en","dateOfBirth":"1972-04-23T00:00:00-08:00","city":"eixbzumedsfazioqhdteuryjvzsgqu","state":"UT","country":"US","postalCode":"54718"}';
+
+        $scope.put_id = null;
+        $scope.put_body = '{"id":"","externalProfileId":"F152108066AC57CCCBFE3EF418245105","externalProfileSource":"http://www.myexample.com/profile/B78BE1934F56DE8EEA5425E67C875DB6/","firstName":"fimevmfab","lastName":"oyifghmknqlljkmipwq","gender":"m","email":"uhjhn@syuwevdsajr.com","language":"en","dateOfBirth":"1972-04-23T00:00:00-08:00","city":"eixbzumedsfazioqhdteuryjvzsgqu","state":"UT","country":"US","postalCode":"54718"}';
+
+        $scope.delete_id = null;
 
         $scope._onSuccess = function(data, status, headers, config) {
           $scope.status = status;
@@ -64,43 +73,54 @@
           $scope.result = data;
         };
 
-        $scope._get = function(url) {
-          $http(
-              {
-                method : "get",
-                url : url,
-                transformRequest : $scope.type == 'json' ? transformRequestAsJson
-                    : transformRequestAsXml
-              }).success($scope._onSuccess).error($scope._onError);
+        $scope._http = function(method, url, body) {
+          $http({
+              method : method,
+              url : url,
+              data : body,
+              transformRequest : $scope.type == 'json' ? transformRequestAsJson : transformRequestAsXml
+          }).success($scope._onSuccess).error($scope._onError);
         };
 
         $scope.getAll = function() {
-          $scope._get('/anythingrest-example/-/users/all/');
+          $scope._http('GET', $scope.root_resource + '/users/all/');
         }
 
         $scope.getMatch = function() {
-          var url = '/anythingrest-example/-/users/match/' + $scope.match_match;
+          var url = $scope.root_resource + '/users/match/' + $scope.match_match;
           var ampersandEngaged = false;
           if ($scope.match_start != null && $scope.match_start != '') {
             url += '?start=' + $scope.match_start;
             ampersandEngaged = true;
           }
           if ($scope.match_end != null && $scope.match_end != '') {
-            url += (ampersandEngaged ? '&' : '?') + 'end='
-                + $scope.match_end;
+            url += (ampersandEngaged ? '&' : '?') + 'end=' + $scope.match_end;
             ampersandEngaged = true;
           }
           if ($scope.match_sortby != null && $scope.match_sortby != '') {
-            url += (ampersandEngaged ? '&' : '?') + 'sortBy='
-                + $scope.match_sortby;
+            url += (ampersandEngaged ? '&' : '?') + 'sortBy=' + $scope.match_sortby;
             ampersandEngaged = true;
           }
           if ($scope.match_sortby != null && $scope.match_sortby != '') {
-            url += (ampersandEngaged ? '&' : '?') + 'sortDirection='
-                + $scope.match_sortdirection;
+            url += (ampersandEngaged ? '&' : '?') + 'sortDirection=' + $scope.match_sortdirection;
             ampersandEngaged = true;
           }
-          $scope._get(url);
+          $scope._http('GET', url, null);
+        }
+
+        $scope.post = function() {
+          var url = $scope.root_resource + '/users/';
+          $scope._http('POST', url, $scope.post_body);
+        }
+
+        $scope.put = function() {
+          var url = $scope.root_resource + '/users/' + $scope.put_id;
+          $scope._http('PUT', url, $scope.put_body);
+        }
+
+        $scope.delete = function() {
+          var url = $scope.root_resource + '/users/' + $scope.delete_id;
+          $scope._http('DELETE', url, null);
         }
 
       });
@@ -112,41 +132,72 @@
 
   <div ng-app="example" ng-controller="examplecontroller">
 
-    <h1>AnythingRest Example - Manual Rest Test</h1>
+    <div style="display: inline-block;">
+      <h1>AnythingRest Example - Manual Rest Test</h1>
+    </div>
 
-    <fieldset style="border: 1; display: inline-block">
-      <legend>Content Type</legend>
-      <input id="radio-type-json" type="radio" ng-model="type" value="json" /><label for="radio-type-json">JSON</label>
-      <input id="radio-type-xml" type="radio" ng-model="type" value="xml" /><label for="radio-type-xml">XML</label>
-    </fieldset>
-    <fieldset style="border: 1; display: inline-block">
-      <legend>Beautify Output</legend>
-      <input id="radio-beautify-raw" type="radio" ng-model="beautify" value="off" /><label for="radio-beautify-raw">Raw</label>
-      <input id="radio-beautify-beautify" type="radio" ng-model="beautify" value="on" /><label
-        for="radio-beautify-beautify">Beautify</label>
-    </fieldset>
+    <div style="display: inline-block;">
+      <fieldset style="border: 1; display: inline-block">
+        <legend>Content Type</legend>
+        <input id="radio-type-json" type="radio" ng-model="type" value="json" /><label for="radio-type-json">JSON</label>
+        <input id="radio-type-xml" type="radio" ng-model="type" value="xml" /><label for="radio-type-xml">XML</label>
+      </fieldset>
+      <fieldset style="border: 1; display: inline-block">
+        <legend>Beautify Output</legend>
+        <input id="radio-beautify-raw" type="radio" ng-model="beautify" value="off" /><label for="radio-beautify-raw">Raw</label>
+        <input id="radio-beautify-beautify" type="radio" ng-model="beautify" value="on" /><label
+          for="radio-beautify-beautify">Beautify</label>
+      </fieldset>
+    </div>
 
-    <hr>
+    <hr />
     <div>
-      <span>/rest/users/all</span>
+      <span>GET /users/all</span>
+      <br />
       <button ng-click="getAll()">Get</button>
     </div>
 
-    <hr>
+    <hr />
     <div>
-      <span>/rest/users/match/</span> <span><input type="text" size="12" ng-model="match_match" /></span> <span>/?start=</span><span><input
+      <span>GET /users/match/</span> <span><input type="text" size="12" ng-model="match_match" /></span> <span>/?start=</span><span><input
         type="text" size="2" ng-model="match_start" /></span> <span>&end=</span><span><input type="text" size="2"
         ng-model="match_end" /></span> <span>&sortBy=</span><span><input type="text" size="6" ng-model="match_sortby" /></span>
       <span>&sortDirection=</span><span><input type="text" size="6" ng-model="match_sortdirection" /></span>
+      <br />
       <button ng-click="getMatch()">Get</button>
     </div>
 
+    <hr />
+    <div>
+      <span>POST /users/</span>
+      <br />
+      <textarea ng-model="post_body" rows="5" cols="132" placeholder="JSON or XML input here...">
+      </textarea>
+      <br />
+      <button ng-click="post()">Post</button>
+    </div>
 
-    <hr>
+    <hr />
+    <div>
+      <span>PUT /users/</span> <span><input type="text" size="12" ng-model="put_id" /></span>
+      <br />
+      <textarea ng-model="put_body" rows="5" cols="132" placeholder="JSON or XML input here..."></textarea>
+      <br />
+      <button ng-click="put()">Put</button>
+    </div>
+
+    <hr />
+    <div>
+      <span>DELETE /users/</span> <span><input type="text" size="12" ng-model="delete_id" /></span> <span>/</span>
+      <br />
+      <button ng-click="delete()">Delete</button>
+    </div>
+
+    <hr />
     <div style="border: 1; display: inline-block">Status: {{status}}</div>
-    <hr>
+    <br />
     <div style="border: 1; display: inline-block">
-      <textarea rows="25" cols="132">{{result}}</textarea>
+      <textarea rows="18" cols="132">{{result}}</textarea>
     </div>
 
   </div>
